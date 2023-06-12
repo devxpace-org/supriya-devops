@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  supriyaEC2Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-04a0ae173da5807d3
+      InstanceType: t2.micro
+      AvailabilityZone: us-east-1b
+     
+  supriyaEC2Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-04a0ae173da5807d3
+      InstanceType: t2.micro
+      AvailabilityZone: us-east-1b
+      
+
+  supriyaEBSVolume01:
+    Type: AWS::EC2::Volume
+    Properties: 
+      AvailabilityZone: us-east-1b
+      Size: 5
+
+  supriyaEBSVolume02:
+    Type: AWS::EC2::Volume
+    Properties: 
+      AvailabilityZone: us-east-1b
+      Size: 6
+
+  EC2VolumeAttachment01:
+    Type: AWS::EC2::VolumeAttachment
+    Properties: 
+      Device: /dev/sdh
+      InstanceId: !Ref supriyaEC2Instance1
+      VolumeId: !Ref supriyaEBSVolume01
+
+  EC2VolumeAttachment02:
+    Type: AWS::EC2::VolumeAttachment
+    Properties: 
+      Device: /dev/sdh
+      InstanceId: !Ref supriyaEC2Instance2
+      VolumeId: !Ref supriyaEBSVolume02
+  
+  supriyaS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: supriya3
+
+  supriyaS3Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: supriya-s3-access-policy
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - s3.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: Role to provide access to S3
+      Policies:
+        - PolicyName: supriya-read-write-s3-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - s3:GetBucketLocation
+                - s3:ListAllMyBuckets
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                - s3:ListBucket
+                Resource:
+                - arn:aws:s3:::test
+              - Effect: Allow
+                Action:
+                - s3:PutObject
+                - s3:GetObject
+                - s3:DeleteObject
+                Resource:
+                - !Sub arn:aws:s3:::${supriyaS3Bucket}
+                - !Sub arn:aws:s3:::${supriyaS3Bucket}/*
+  supriyaloadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: supriyaloadBalancer
+      Scheme: internet-facing
+      Type: network
+      Subnets:
+        - subnet-0c77edbc00676c01b
+
+        
+  supriyaTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: supriyaTargetGroup
+      Port: 80
+      Protocol: TCP
+      VpcId: vpc-02a79ea45d6d06ba7
+      Targets:
+        - Id: !Ref supriyaEC2Instance1
+          Port: 80
+          #AvailabilityZone: us-east-1b
+        - Id: !Ref supriyaEC2Instance2
+          Port: 80
+          #AvailabilityZone: us-east-1b
+
+  supriyaListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref supriyaloadBalancer
+      Port: 80
+      Protocol: TCP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref supriyaTargetGroup
