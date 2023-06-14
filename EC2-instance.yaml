@@ -112,7 +112,7 @@ Resources:
   supriyaListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
-      LoadBalancerArn: !Ref supriyaloadBalancer
+      LoadBalancerArn: !Ref supriyaloadBalancerls
       Port: 80
       Protocol: TCP
       DefaultActions:
