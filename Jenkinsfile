@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build and Deploy') {
             steps {
-
+                 sh 'chmod 666 /var/run/docker.sock'
                  sh 'docker build -t supriyagoud555/myapp:1.0 .'
         
         }
