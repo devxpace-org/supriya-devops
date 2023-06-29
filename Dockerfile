@@ -7,4 +7,4 @@ WORKDIR /Users/supri/supriya-devops/
 
 RUN npm install
 
-ENTRYPOINT ["node", "tejaswini.js"]
+ENTRYPOINT ["node", "haripriya.js"]
