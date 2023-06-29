@@ -7,4 +7,4 @@ WORKDIR /Users/supri/supriya-devops/
 
 RUN npm install
 
-ENTRYPOINT ["node", "helloworld.js"]
+ENTRYPOINT ["node", "supriya.js"]
