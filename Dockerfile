@@ -7,4 +7,4 @@ WORKDIR /Users/supri/supriya-devops/
 
 RUN npm install
 
-ENTRYPOINT ["node", "sumanth.js"]
+ENTRYPOINT ["node", "raja.js"]
