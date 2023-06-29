@@ -7,4 +7,4 @@ WORKDIR /Users/supri/supriya-devops/
 
 RUN npm install
 
-ENTRYPOINT ["node", "chethana.js"]
+ENTRYPOINT ["node", "harshitha.js"]
