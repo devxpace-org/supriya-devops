@@ -1,10 +1,10 @@
 FROM node:20-alpine
 
-COPY package.json /Users/supri/supriya-devops/
-COPY src /Users/supri/supriya-devops/
+COPY package.json /app/helloworld/
+COPY src /app/helloworld/
 
-WORKDIR /Users/supri/supriya-devops/
+WORKDIR /app/helloworld/
 
 RUN npm install
 
-ENTRYPOINT ["node", "maazin.js"]
+ENTRYPOINT ["node", "example.js"]
